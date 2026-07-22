@@ -69,6 +69,14 @@ test(destruir_al_demonio_aura_no_paso_al_olvido_en_1440, [fail]):-
 % TESTS DEL PUNTO 3  Faltan agregar tests fueras de la consigna
 % ------------------------------------------------------------
 
+test(lawine_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
+    es_recordada_por(hazania(destruir_al_rey_demonio, _, _), lawine, 1400).
+
+test(lawine_no_recuerda_destruir_al_rey_demonio_en_1390, [fail]):-
+    es_recordada_por(hazania(destruir_al_rey_demonio, _, _), lawine, 1390).
+
+test(fern_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
+    es_recordada_por(hazania(destruir_al_rey_demonio, _, _), fern, 1400).
 
 :- end_tests(tpIntegrador).
 
@@ -131,6 +139,13 @@ conoce(voll, hazania(destruir_al_demonio_aura, [denken], auberst), 1400, libro(5
 conoce(serie, hazania(destruir_al_rey_demonio, [frieren, himmel, heiter, eisen], ende), 1335, libro(100)).
 conoce(kanne, hazania(recuperar_al_gato_perdido, [himmel, frieren], weise), 1375, presencio).
 
+conoce(Persona, Hazania, AnioConocimiento, conmemoracion(TipoConmemoracion)):-
+    habitante(Persona, _, AnioNacimiento, Pueblo),
+    conmemora(Pueblo, Hazania, TipoConmemoracion),
+    anio_inicio_conmemoracion(TipoConmemoracion, AnioInicio),
+    anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioConocimiento),
+    esta_vivo(Persona, AnioConocimiento).
+
 % hazania(Nombre_Hazania, [Realizadores_de_Hazania], Lugar_de_Hazania)
 
 
@@ -150,6 +165,10 @@ recuerdo_vigente(cancion, AnioConocimiento, Anio):-
 recuerdo_vigente(libro(Paginas), AnioConocimiento, Anio):-
     Anio =< AnioConocimiento + Paginas.
 
+recuerdo_vigente(conmemoracion(diaFestivo(_)), _, _).
+
+recuerdo_vigente(conmemoracion(estatua(NombreEstatua, Material, AnioConstruccion)), _, AnioConsulta):-
+    esta_en_buen_estado(estatua(NombreEstatua, Material, AnioConstruccion), AnioConsulta).
 
 % Punto 2.b - Una Hazania esta corroborada
 
@@ -191,3 +210,33 @@ conmemora(auberst, hazania(destruir_a_schlat_el_omnisciente, [heroe_del_sur], en
 mantenimiento(el_equipo_de_heroes, 1400).
 mantenimiento(el_equipo_de_heroes, 1450).
 mantenimiento(el_heroe_del_sur, 1410).
+
+
+% Punto 3.b - Conocimiento de hazañas por conmemoraciones
+
+anio_inicio_conmemoracion(diaFestivo(AnioInicio), AnioInicio).
+anio_inicio_conmemoracion(estatua(_, _, AnioConstruccion), AnioConstruccion).
+
+anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioInicio):-
+    AnioNacimiento =< AnioInicio.
+
+anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioNacimiento):-
+    AnioNacimiento > AnioInicio.
+
+
+% Estado de conservación de las estatuas
+
+duracion_buen_estado(marmol, 30).
+duracion_buen_estado(bronce, 15).
+
+esta_en_buen_estado(estatua(NombreEstatua, Material, AnioConstruccion), AnioConsulta):-
+    conmemora(_, _, estatua(NombreEstatua, Material, AnioConstruccion)),
+    duracion_buen_estado(Material, Duracion),
+    puesta_en_condiciones(estatua(NombreEstatua, Material, AnioConstruccion), AnioPuestaEnCondiciones),
+    AnioPuestaEnCondiciones =< AnioConsulta,
+    AnioConsulta =< AnioPuestaEnCondiciones + Duracion.
+
+puesta_en_condiciones(estatua(_, _, AnioConstruccion), AnioConstruccion).
+
+puesta_en_condiciones(estatua(NombreEstatua, _, _), AnioMantenimiento):-
+    mantenimiento(NombreEstatua, AnioMantenimiento).
