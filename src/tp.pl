@@ -2,13 +2,13 @@
 % TESTS
 % ============================================================
 
-
 :- begin_tests(tpIntegrador, []).
 
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 1 Faltan agregar tests fueras de la consigna
-% ------------------------------------------------------------ 
+% TESTS DEL PUNTO 1  Faltan agregar tests fueras de la consigna
+% ------------------------------------------------------------
+
 test(kanne_esta_viva_en_1370):-
     esta_vivo(kanne, 1370).
 
@@ -27,21 +27,11 @@ test(voll_no_esta_vivo_en_1551, [fail]):-
 test(serie_esta_viva_en_5000, [nondet]):-
     esta_vivo(serie, 5000).
 
-test(lawine_recuerda_destruir_al_demonio_aura_en_1400, [nondet]):-
-    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1400).
-
-test(lawine_no_recuerda_destruir_al_demonio_aura_en_1380, [fail]):-
-    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1380).
-
-test(lawine_no_recuerda_destruir_al_demonio_aura_en_1410, [fail]):-
-    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1410).
-
-
-
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 2 Faltan agregar tests fuera de la consigna
+% TESTS DEL PUNTO 2  Faltan agregar tests fueras de la consigna
 % ------------------------------------------------------------
+
 test(lawine_no_recuerda_destruir_al_demonio_aura_en_1380, [fail]):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1380).
 
@@ -66,17 +56,17 @@ test(wirbel_no_recuerda_rescatar_a_la_hermana_de_wirbel_en_1440, [fail]):-
 test(rescatar_a_la_hermana_de_wirbel_es_una_hazania_corroborada, [nondet]):-
     esta_corroborada(rescatar_a_la_hermana_de_wirbel).
 
-test(destuir_al_demonio_aura_no_es_una_hazania_corroborada, [fail]):-
+test(destruir_al_demonio_aura_no_es_una_hazania_corroborada, [fail]):-
     esta_corroborada(destruir_al_demonio_aura).
 
 test(destruir_al_demonio_aura_paso_al_olvido_en_1460, [nondet]):-
     paso_al_olvido(destruir_al_demonio_aura, 1460).
 
-test(ddestruir_al_demonio_aura_no_paso_al_olvido_en_1440, [fail]):-
+test(destruir_al_demonio_aura_no_paso_al_olvido_en_1440, [fail]):-
     paso_al_olvido(destruir_al_demonio_aura, 1440).
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 3
+% TESTS DEL PUNTO 3  Faltan agregar tests fueras de la consigna
 % ------------------------------------------------------------
 
 
@@ -180,24 +170,24 @@ hay_otra_version(Nombre_Hazania, _, Lugar_de_Hazania):-
 
 paso_al_olvido(NombreHazania, AnioConsulta) :-
     conoce(_, hazania(NombreHazania, _, _), _, _),
-    not(
-        es_recordada_por(
-            hazania(NombreHazania, _, _), _, AnioConsulta)
-    ).
-% -----------------------------------------------------
+    not(es_recordada_por(hazania(NombreHazania, _, _), _, AnioConsulta)).
+
+% ------------------------------------------------------------
 % PUNTO 3: CONMEMORANDO HAZAÑAS
 % ------------------------------------------------------------
 
-% Punto 3.a - Días festivos
+% Punto 3.a - Las conmemoraciones
 
-% Punto 3.b - Estatuas
+% conmemora(Pueblo, hazania(Nombre, [Realizadores], Lugar), TipoConmemoracion).
 
-% Punto 3.c - Mantenimientos de estatuas
+% conmemora(Pueblo, Hazania, diaFestivo(AnioInicio)).
+conmemora(weise, hazania(destruir_al_rey_demonio, [frieren, himmel, heiter, eisen], ende), diaFestivo(1340)).
 
-% Punto 3.d - Estado de conservación de las estatuas
+% conmemora(Pueblo, Hazania, estatua(NombreEstatua, Material, AnioConstruccion)).
+conmemora(auberst, hazania(destruir_al_rey_demonio, [frieren, himmel, heiter, eisen], ende), estatua(el_equipo_de_heroes, bronce, 1370)).
+conmemora(auberst, hazania(destruir_a_schlat_el_omnisciente, [heroe_del_sur], ende), estatua(el_heroe_del_sur, marmol, 1340)).
 
-% Punto 3.e - Conocimiento de hazañas por conmemoraciones
-
-% Punto 3.f - Recuerdos generados por días festivos
-
-% Punto 3.g - Recuerdos generados por estatuas
+% mantenimiento(NombreEstatua, AnioMantenimiento).
+mantenimiento(el_equipo_de_heroes, 1400).
+mantenimiento(el_equipo_de_heroes, 1450).
+mantenimiento(el_heroe_del_sur, 1410).
