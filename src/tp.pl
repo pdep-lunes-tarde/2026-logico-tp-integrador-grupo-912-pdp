@@ -7,9 +7,8 @@
 
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 1
-% ------------------------------------------------------------
-
+% TESTS DEL PUNTO 1 Faltan agregar tests fueras de la consigna
+% ------------------------------------------------------------ 
 test(kanne_esta_viva_en_1370):-
     esta_vivo(kanne, 1370).
 
@@ -38,10 +37,43 @@ test(lawine_no_recuerda_destruir_al_demonio_aura_en_1410, [fail]):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1410).
 
 
-% ------------------------------------------------------------
-% TESTS DEL PUNTO 2
-% ------------------------------------------------------------
 
+
+% ------------------------------------------------------------
+% TESTS DEL PUNTO 2 Faltan agregar tests fuera de la consigna
+% ------------------------------------------------------------
+test(lawine_no_recuerda_destruir_al_demonio_aura_en_1380, [fail]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1380).
+
+test(lawine_recuerda_destruir_al_demonio_aura_en_1400, [nondet]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1400).
+
+test(lawine_no_recuerda_destruir_al_demonio_aura_en_1410, [fail]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1410).
+
+test(voll_recuerda_destruir_al_demonio_aura_en_1450):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), voll, 1450).
+
+test(voll_no_recuerda_destruir_al_demonio_aura_en_1460, [fail]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), voll, 1460).
+
+test(wirbel_recuerda_rescatar_a_la_hermana_de_wirbel_en_1430, [nondet]):-
+    es_recordada_por(hazania(rescatar_a_la_hermana_de_wirbel, _, _), wirbel, 1430).
+
+test(wirbel_no_recuerda_rescatar_a_la_hermana_de_wirbel_en_1440, [fail]):-
+    es_recordada_por(hazania(rescatar_a_la_hermana_de_wirbel, _, _), wirbel, 1440).
+
+test(rescatar_a_la_hermana_de_wirbel_es_una_hazania_corroborada, [nondet]):-
+    esta_corroborada(rescatar_a_la_hermana_de_wirbel).
+
+test(destuir_al_demonio_aura_no_es_una_hazania_corroborada, [fail]):-
+    esta_corroborada(destruir_al_demonio_aura).
+
+test(destruir_al_demonio_aura_paso_al_olvido_en_1460, [nondet]):-
+    paso_al_olvido(destruir_al_demonio_aura, 1460).
+
+test(ddestruir_al_demonio_aura_no_paso_al_olvido_en_1440, [fail]):-
+    paso_al_olvido(destruir_al_demonio_aura, 1440).
 
 % ------------------------------------------------------------
 % TESTS DEL PUNTO 3
@@ -146,9 +178,13 @@ hay_otra_version(Nombre_Hazania, _, Lugar_de_Hazania):-
 
 % Punto 2.c - Paso al olvido
 
-
-
-% ------------------------------------------------------------
+paso_al_olvido(NombreHazania, AnioConsulta) :-
+    conoce(_, hazania(NombreHazania, _, _), _, _),
+    not(
+        es_recordada_por(
+            hazania(NombreHazania, _, _), _, AnioConsulta)
+    ).
+% -----------------------------------------------------
 % PUNTO 3: CONMEMORANDO HAZAÑAS
 % ------------------------------------------------------------
 
@@ -164,4 +200,4 @@ hay_otra_version(Nombre_Hazania, _, Lugar_de_Hazania):-
 
 % Punto 3.f - Recuerdos generados por días festivos
 
-% Punto 3.g - Recuerdos generados por estatuas.
+% Punto 3.g - Recuerdos generados por estatuas
