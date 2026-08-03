@@ -27,6 +27,12 @@ test(voll_no_esta_vivo_en_1551, [fail]):-
 test(serie_esta_viva_en_5000, [nondet]):-
     esta_vivo(serie, 5000).
 
+test(voll_no_esta_vivo_en_1199, [fail]):-
+    esta_vivo(voll, 1199).
+
+test(serie_no_esta_viva_en_499, [fail]):-
+    esta_vivo(serie, 499).
+
 
 % ------------------------------------------------------------
 % TESTS DEL PUNTO 2  Faltan agregar tests fueras de la consigna
@@ -65,6 +71,12 @@ test(destruir_al_demonio_aura_paso_al_olvido_en_1460, [nondet]):-
 test(destruir_al_demonio_aura_no_paso_al_olvido_en_1440, [fail]):-
     paso_al_olvido(destruir_al_demonio_aura, 1440).
 
+test(wirbel_recuerda_rescatar_a_la_hermana_de_wirbel_en_1429):-
+    es_recordada_por(hazania(rescatar_a_la_hermana_de_wirbel, _, _), wirbel, 1429).
+
+test(voll_no_recuerda_destruir_al_demonio_aura_en_1399, [fail]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, [denken], auberst), voll, 1399).
+
 % ------------------------------------------------------------
 % TESTS DEL PUNTO 3  Faltan agregar tests fueras de la consigna
 % ------------------------------------------------------------
@@ -77,6 +89,24 @@ test(lawine_no_recuerda_destruir_al_rey_demonio_en_1390, [fail]):-
 
 test(fern_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
     es_recordada_por(hazania(destruir_al_rey_demonio, _, _), fern, 1400).
+
+test(lawine_no_conoce_destruir_al_rey_demonio_en_1317, [fail]):-
+    conoce(lawine, hazania(destruir_al_rey_demonio, _, _), 1317, _).
+
+test(lernen_no_conoce_destruir_a_Schlat_el_Omnisciente_en_1339, [fail]):-
+    conoce(lernen, hazania(destruir_a_schlat_el_omnisciente, _, _), 1339, _).
+
+test(voll_no_conoce_destruir_a_Schlat_el_Omnisciente, [fail]):-
+    conoce(voll, hazania(destruir_a_schlat_el_omnisciente, _, _), _, _).
+
+test(estatua_de_marmol_nueva):-
+    esta_en_buen_estado(estatua(el_heroe_del_sur, marmol, 1340), 1350).
+
+test(estatua_de_bronce_nueva):-
+    esta_en_buen_estado(estatua(el_equipo_de_heroes, bronce, 1370), 1380).
+
+
+
 
 :- end_tests(tpIntegrador).
 
@@ -92,7 +122,7 @@ test(fern_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
 
 % Punto 1.a - Habitantes
 
-% habitante(nobre, raza, anio_naciomiento, pueblo ).
+% habitante(nombre, raza, anio_nacimiento, pueblo).
 habitante(denken, humano, 1290, auberst).
 habitante(voll, enano, 1200, ende).
 habitante(serie, elfo, 500, weise).     

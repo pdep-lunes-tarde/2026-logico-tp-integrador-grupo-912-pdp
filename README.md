@@ -2,7 +2,11 @@
 
 ## Integrantes
 
-**Equipo:** 
+**Equipo:**
+Catalina Scarpelli
+Nicolas Ezequiel Pipke
+Martin Ilan Zajdenberg
+Bartolome Famea
 
 ## Fecha de entrega de parte 1
 
