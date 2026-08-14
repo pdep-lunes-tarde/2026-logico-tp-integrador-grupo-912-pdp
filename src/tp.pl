@@ -270,3 +270,35 @@ puesta_en_condiciones(estatua(_, _, AnioConstruccion), AnioConstruccion).
 
 puesta_en_condiciones(estatua(NombreEstatua, _, _), AnioMantenimiento):-
     mantenimiento(NombreEstatua, AnioMantenimiento).
+
+% ------------------------------------------------------------
+% PUNTO 4: LOS PUEBLOS
+% ------------------------------------------------------------
+
+pueblo_recuerda(Pueblo, Hazania, Anio):-
+    habitante(Persona, _, _, Pueblo),
+    es_recordada_por(Hazania, Persona, Anio).
+
+paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasTotales):-
+    findall(
+        Paginas,
+        habitante(Persona, _, _, Pueblo),
+        conoce(Persona, _, Anio, libro(Paginas)
+    ),
+    ListaPaginas
+    ),
+    sum_list(ListaPaginas, PaginasTotales).
+
+
+    pueblo(Pueblo):-
+    habitante(_, _, _, Pueblo).
+pueblo_mas_lector(Pueblo, Anio, PaginasTotales):-
+    paginas_leidas_en_un_pueblo(Pueblo, Anio, Paginas),
+    forall(
+        pueblo(OtroPueblo),
+        (
+        paginas_leidas_en_un_pueblo(OtroPueblo, Anio, PaginasOtroPueblo),
+        Paginas >= PaginasOtroPueblo
+        )
+    ).
+
