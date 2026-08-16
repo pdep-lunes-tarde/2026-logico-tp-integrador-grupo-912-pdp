@@ -107,6 +107,15 @@ test(estatua_de_bronce_nueva):-
 
 
 
+% ------------------------------------------------------------
+% TESTS DEL PUNTO 5
+% ------------------------------------------------------------
+
+test(fern_es_heroe, [nondet]):-
+    es_heroe(fern).
+
+test(frieren_inspiro_a_fern, [nondet]):-
+    quienes_inspiraron_a(fern, frieren).
 
 :- end_tests(tpIntegrador).
 
@@ -377,3 +386,39 @@ esta_viviendo_tiempos_sin_precedentes(Pueblo, Anio):-
         es_recordada_por(Hazania, Persona, Anio)
          )
         ).
+    
+% ------------------------------------------------------------
+% PUNTO 5: INSPIRACIÓN
+% ------------------------------------------------------------
+
+es_heroe(Persona) :-
+    conoce(_, hazania(_, Heroes, _), _, _),
+    participa_hazania(Persona, Heroes).
+
+participa_hazania(Persona, Heroes) :-
+    member(Persona, Heroes).
+
+quienes_inspiraron_a(Persona, Inspirador) :-
+    conoce(Persona, hazania(_, Heroes, _), _, _),
+    member(Inspirador, Heroes),
+    Inspirador \= Persona.
+
+heroes_inspirados_por(HeroeInspirador, HeroeInspirado) :-
+    es_heroe(HeroeInspirador),
+    es_heroe(HeroeInspirado),
+    HeroeInspirador \= HeroeInspirado,
+    conoce(HeroeInspirado, hazania(_, Heroes, _), _, _),
+    distinct(
+        conoce(HeroeInspirado, hazania(_, Heroes, _), _, _),
+        member(HeroeInspirador, Heroes)
+    ).
+
+cadena_de_inspiracion_entre_heroes(Heroe, Cadena) :-
+    distinct(cadena_simple(Heroe, Cadena)).
+
+cadena_simple(Heroe, [Heroe, HeroeInspirado]) :-
+    heroes_inspirados_por(Heroe, HeroeInspirado).
+
+cadena_simple(Heroe, [Heroe, HeroeInspirado | Resto]) :-
+    heroes_inspirados_por(Heroe, HeroeInspirado),
+    cadena_simple(HeroeInspirado, [HeroeInspirado | Resto]).
