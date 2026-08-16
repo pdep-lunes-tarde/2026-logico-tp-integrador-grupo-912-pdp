@@ -93,10 +93,10 @@ test(fern_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
 test(lawine_no_conoce_destruir_al_rey_demonio_en_1317, [fail]):-
     conoce(lawine, hazania(destruir_al_rey_demonio, _, _), 1317, _).
 
-test(lernen_no_conoce_destruir_a_Schlat_el_Omnisciente_en_1339, [fail]):-
+test(lernen_no_conoce_destruir_a_schlat_el_omnisciente_en_1339, [fail]):-
     conoce(lernen, hazania(destruir_a_schlat_el_omnisciente, _, _), 1339, _).
 
-test(voll_no_conoce_destruir_a_Schlat_el_Omnisciente, [fail]):-
+test(voll_no_conoce_destruir_a_schlat_el_omnisciente, [fail]):-
     conoce(voll, hazania(destruir_a_schlat_el_omnisciente, _, _), _, _).
 
 test(estatua_de_marmol_nueva):-
@@ -217,9 +217,9 @@ hay_otra_version(Nombre_Hazania, _, Lugar_de_Hazania):-
 
 % Punto 2.c - Paso al olvido
 
-paso_al_olvido(NombreHazania, AnioConsulta) :-
-    conoce(_, hazania(NombreHazania, _, _), _, _),
-    not(es_recordada_por(hazania(NombreHazania, _, _), _, AnioConsulta)).
+paso_al_olvido(Hazania, AnioConsulta) :-
+    conoce(_, hazania(Hazania, _, _), _, _),
+    not(es_recordada_por(hazania(Hazania, _, _), _, AnioConsulta)).
 
 % ------------------------------------------------------------
 % PUNTO 3: CONMEMORANDO HAZAÑAS
@@ -275,30 +275,105 @@ puesta_en_condiciones(estatua(NombreEstatua, _, _), AnioMantenimiento):-
 % PUNTO 4: LOS PUEBLOS
 % ------------------------------------------------------------
 
+
+% I
+
 pueblo_recuerda(Pueblo, Hazania, Anio):-
     habitante(Persona, _, _, Pueblo),
     es_recordada_por(Hazania, Persona, Anio).
 
+% II
+
 paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasTotales):-
-    findall(
-        Paginas,
+    findall(Paginas, 
+        (
         habitante(Persona, _, _, Pueblo),
-        conoce(Persona, _, Anio, libro(Paginas)
-    ),
-    ListaPaginas
-    ),
-    sum_list(ListaPaginas, PaginasTotales).
+        conoce(Persona, _, Anio, libro(Paginas))
+        ),
+        LPaginas),
+    sum_list(LPaginas, PaginasTotales).
 
-
-    pueblo(Pueblo):-
-    habitante(_, _, _, Pueblo).
-pueblo_mas_lector(Pueblo, Anio, PaginasTotales):-
-    paginas_leidas_en_un_pueblo(Pueblo, Anio, Paginas),
+% III
+    
+pueblo_mas_lector(Pueblo, OtroPueblo, Anio):-
+    habitante(_, _, _, Pueblo),
+    paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasTotales),
     forall(
-        pueblo(OtroPueblo),
+        habitante(_, _, _, OtroPueblo),
         (
         paginas_leidas_en_un_pueblo(OtroPueblo, Anio, PaginasOtroPueblo),
-        Paginas >= PaginasOtroPueblo
+        PaginasTotales >= PaginasOtroPueblo
         )
     ).
 
+% IV
+
+es_musical(Pueblo, Anio):-
+    habitante(_, _, _, Pueblo),
+    mayoria_de_hazanias_se_recuerdan_a_traves_de_canciones(Pueblo, Anio).
+
+mayoria_de_hazanias_se_recuerdan_a_traves_de_canciones(Pueblo, Anio):-
+    findall(Hazania, pueblo_recuerda(Pueblo, Hazania, Anio), Hazanias),
+    findall(Hazania,
+        (
+        pueblo_recuerda(Pueblo, Hazania, Anio),
+        habitante(Persona, _, _, Pueblo),
+        conoce(Persona, Hazania, _, cancion)
+        ),
+        HazaniasRecordadasPorCancion),
+    length(Hazanias, LHazanias),
+    length(HazaniasRecordadasPorCancion, LHazaniasRecordadasPorCancion),
+    LHazaniasRecordadasPorCancion > (LHazanias / 2).
+
+% V
+
+es_chismoso(Pueblo, Anio):-
+    habitante(_, _, _, Pueblo),
+    ninguna_hazania_esta_corroborada(Pueblo, Anio).
+
+ninguna_hazania_esta_corroborada(Pueblo, Anio):-
+    findall(HazaniaCorroborada,
+        (
+        pueblo_recuerda(Pueblo, HazaniaCorroborada, Anio),
+        esta_corroborada(HazaniaCorroborada)
+        ),
+        HazaniasCorroboradas),
+    length(HazaniasCorroboradas, LHazaniasCorroboradas),
+    LHazaniasCorroboradas = 0.
+
+% VI
+
+hazania_es_importante(Pueblo, Hazania, Anio):-
+    habitante(_, _, _, Pueblo),
+    todos_los_habitantes_recuerdan(Hazania, Pueblo, Anio).
+
+todos_los_habitantes_recuerdan(Hazania, Pueblo, Anio):-
+    findall(Persona,
+        (
+        habitante(Persona, _, _, Pueblo),
+        esta_vivo(Persona, Anio)
+        ),
+        Habitantes),
+    findall(Persona,
+        (
+        habitante(Persona, _, _, Pueblo),
+        es_recordada_por(Hazania, Persona, Anio)
+        ),
+        HabitantesRecuerdan
+    ),
+    length(Habitantes, LHabitantes),
+    length(HabitantesRecuerdan, LHabitantesRecuerdan),
+    LHabitantes = LHabitantesRecuerdan.
+
+% VII
+
+esta_viviendo_tiempos_sin_precedentes(Pueblo, Anio):-
+    habitante(_, _, _, Pueblo),
+    findall(HazaniaImportante, hazania_es_importante(Pueblo, HazaniaImportante, Anio), HazaniasImportantes),
+    forall(member(Hazania, HazaniasImportantes), 
+        (
+        habitante(Persona, _, _, Pueblo),
+        conoce(Persona, Hazania, _, presencio),
+        es_recordada_por(Hazania, Persona, Anio)
+         )
+        ).
