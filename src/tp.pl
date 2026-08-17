@@ -294,24 +294,25 @@ pueblo_recuerda(Pueblo, Hazania, Anio):-
 % II
 
 paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasTotales):-
+    habitante(_, _, _, Pueblo),
     findall(Paginas, 
         (
         habitante(Persona, _, _, Pueblo),
         conoce(Persona, _, Anio, libro(Paginas))
         ),
-        LPaginas),
-    sum_list(LPaginas, PaginasTotales).
+        PaginasLeidas),
+    sum_list(PaginasLeidas, PaginasTotales).
 
 % III
     
 pueblo_mas_lector(Pueblo, OtroPueblo, Anio):-
     habitante(_, _, _, Pueblo),
-    paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasTotales),
+    paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasLeidas),
     forall(
         habitante(_, _, _, OtroPueblo),
         (
-        paginas_leidas_en_un_pueblo(OtroPueblo, Anio, PaginasOtroPueblo),
-        PaginasTotales >= PaginasOtroPueblo
+        paginas_leidas_en_un_pueblo(OtroPueblo, Anio, PaginasLeidasOtroPueblo),
+        PaginasLeidas >= PaginasLeidasOtroPueblo
         )
     ).
 
@@ -319,74 +320,58 @@ pueblo_mas_lector(Pueblo, OtroPueblo, Anio):-
 
 es_musical(Pueblo, Anio):-
     habitante(_, _, _, Pueblo),
-    mayoria_de_hazanias_se_recuerdan_a_traves_de_canciones(Pueblo, Anio).
 
-mayoria_de_hazanias_se_recuerdan_a_traves_de_canciones(Pueblo, Anio):-
-    findall(Hazania, pueblo_recuerda(Pueblo, Hazania, Anio), Hazanias),
-    findall(Hazania,
-        (
-        pueblo_recuerda(Pueblo, Hazania, Anio),
-        habitante(Persona, _, _, Pueblo),
-        conoce(Persona, Hazania, _, cancion)
-        ),
-        HazaniasRecordadasPorCancion),
-    length(Hazanias, LHazanias),
-    length(HazaniasRecordadasPorCancion, LHazaniasRecordadasPorCancion),
-    LHazaniasRecordadasPorCancion > (LHazanias / 2).
+    findall(Hazania, (pueblo_recuerda(Pueblo, Hazania, Anio), se_recuerda_por_cancion(Pueblo, Hazania, Anio)), HazaniasRecordadasPorCancion),
+    findall(Hazania,(pueblo_recuerda(Pueblo, Hazania, Anio), not(se_recuerda_por_cancion(Pueblo, Hazania, Anio))), HazaniasNoRecordadasPorCancion),
+
+    length(HazaniasRecordadasPorCancion, CantidadRecordadasPorCancion),
+    length(HazaniasNoRecordadasPorCancion,CantidadNoRecordadasPorCancion),
+    CantidadRecordadasPorCancion > CantidadNoRecordadasPorCancion.
+
+se_recuerda_por_cancion(Pueblo, Hazania, Anio):-
+    habitante(Persona, _, _, Pueblo),
+    conoce(Persona, Hazania, AnioConocimiento, cancion),
+    AnioConocimiento =< Anio,
+    recuerdo_vigente(cancion, AnioConocimiento, Anio),
+    esta_vivo(Persona, Anio).
 
 % V
 
 es_chismoso(Pueblo, Anio):-
     habitante(_, _, _, Pueblo),
-    ninguna_hazania_esta_corroborada(Pueblo, Anio).
+    not(hay_hazania_corroborada(Pueblo, Anio)).
 
-ninguna_hazania_esta_corroborada(Pueblo, Anio):-
-    findall(HazaniaCorroborada,
-        (
-        pueblo_recuerda(Pueblo, HazaniaCorroborada, Anio),
-        esta_corroborada(HazaniaCorroborada)
-        ),
-        HazaniasCorroboradas),
-    length(HazaniasCorroboradas, LHazaniasCorroboradas),
-    LHazaniasCorroboradas = 0.
+hay_hazania_corroborada(Pueblo, Anio):-
+    pueblo_recuerda(Pueblo, hazania(NombreHazania, _, _),Anio),
+    esta_corroborada(NombreHazania).
 
 % VI
 
 hazania_es_importante(Pueblo, Hazania, Anio):-
-    habitante(_, _, _, Pueblo),
-    todos_los_habitantes_recuerdan(Hazania, Pueblo, Anio).
-
-todos_los_habitantes_recuerdan(Hazania, Pueblo, Anio):-
-    findall(Persona,
+    pueblo_recuerda(Pueblo, Hazania, Anio),
+    forall(
         (
-        habitante(Persona, _, _, Pueblo),
-        esta_vivo(Persona, Anio)
+            habitante(Persona, _, _, Pueblo),
+            esta_vivo(Persona, Anio)
         ),
-        Habitantes),
-    findall(Persona,
-        (
-        habitante(Persona, _, _, Pueblo),
         es_recordada_por(Hazania, Persona, Anio)
-        ),
-        HabitantesRecuerdan
-    ),
-    length(Habitantes, LHabitantes),
-    length(HabitantesRecuerdan, LHabitantesRecuerdan),
-    LHabitantes = LHabitantesRecuerdan.
+    ).
 
 % VII
 
 esta_viviendo_tiempos_sin_precedentes(Pueblo, Anio):-
     habitante(_, _, _, Pueblo),
-    findall(HazaniaImportante, hazania_es_importante(Pueblo, HazaniaImportante, Anio), HazaniasImportantes),
-    forall(member(Hazania, HazaniasImportantes), 
-        (
-        habitante(Persona, _, _, Pueblo),
-        conoce(Persona, Hazania, _, presencio),
-        es_recordada_por(Hazania, Persona, Anio)
-         )
-        ).
-    
+    forall(
+        hazania_es_importante(Pueblo, Hazania, Anio),
+        pueblo_recuerda_por_presenciar(Pueblo, Hazania, Anio)
+    ).
+
+pueblo_recuerda_por_presenciar(Pueblo, Hazania, Anio):-
+    habitante(Persona, _, _, Pueblo),
+    conoce(Persona, Hazania, AnioConocimiento, presencio),
+    AnioConocimiento =< Anio,
+    es_recordada_por(Hazania, Persona, Anio).
+
 % ------------------------------------------------------------
 % PUNTO 5: INSPIRACIÓN
 % ------------------------------------------------------------
