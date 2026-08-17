@@ -376,34 +376,39 @@ pueblo_recuerda_por_presenciar(Pueblo, Hazania, Anio):-
 % PUNTO 5: INSPIRACIÓN
 % ------------------------------------------------------------
 
-es_heroe(Persona) :-
-    conoce(_, hazania(_, Heroes, _), _, _),
-    participa_hazania(Persona, Heroes).
+% a
+es_heroe(Persona):-
+    conoce(_, Hazania, _, _),
+    participa_en_hazania(Persona, Hazania).
 
-participa_hazania(Persona, Heroes) :-
+participa_en_hazania(Persona, hazania(_, Heroes, _)):-
     member(Persona, Heroes).
 
-quienes_inspiraron_a(Persona, Inspirador) :-
-    conoce(Persona, hazania(_, Heroes, _), _, _),
-    member(Inspirador, Heroes),
-    Inspirador \= Persona.
+% b
+quienes_inspiraron_a(Heroe, Inspirador):-
+    es_heroe(Heroe),
+    conoce(Heroe, Hazania, _, _),
+    participa_en_hazania(Inspirador, Hazania),
+    Inspirador \= Heroe.
 
-heroes_inspirados_por(HeroeInspirador, HeroeInspirado) :-
-    es_heroe(HeroeInspirador),
-    es_heroe(HeroeInspirado),
-    HeroeInspirador \= HeroeInspirado,
-    conoce(HeroeInspirado, hazania(_, Heroes, _), _, _),
-    distinct(
-        conoce(HeroeInspirado, hazania(_, Heroes, _), _, _),
-        member(HeroeInspirador, Heroes)
+inspiro_a(Inspirador, Heroe):-
+    quienes_inspiraron_a(Heroe, Inspirador).
+
+
+% c
+
+cadena_de_inspiracion_entre_heroes(Heroe, Cadena):-
+    cadena_desde(Heroe, [Heroe], Cadena).
+
+cadena_desde(Heroe, HeroesYaIncluidos, [Heroe, HeroeInspirado]):-
+    inspiro_a(Heroe, HeroeInspirado),
+    not(member(HeroeInspirado, HeroesYaIncluidos)).
+
+cadena_desde(Heroe, HeroesYaIncluidos, [Heroe | RestoCadena]):-
+    inspiro_a(Heroe, HeroeInspirado),
+    not(member(HeroeInspirado, HeroesYaIncluidos)),
+    cadena_desde(
+        HeroeInspirado,
+        [HeroeInspirado | HeroesYaIncluidos],
+        RestoCadena
     ).
-
-cadena_de_inspiracion_entre_heroes(Heroe, Cadena) :-
-    distinct(cadena_simple(Heroe, Cadena)).
-
-cadena_simple(Heroe, [Heroe, HeroeInspirado]) :-
-    heroes_inspirados_por(Heroe, HeroeInspirado).
-
-cadena_simple(Heroe, [Heroe, HeroeInspirado | Resto]) :-
-    heroes_inspirados_por(Heroe, HeroeInspirado),
-    cadena_simple(HeroeInspirado, [HeroeInspirado | Resto]).
