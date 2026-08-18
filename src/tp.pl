@@ -119,6 +119,21 @@ test(frieren_inspiro_a_fern, [nondet]):-
 
 :- end_tests(tpIntegrador).
 
+% ------------------------------------------------------------
+% TESTS DEL PUNTO 6 
+% ------------------------------------------------------------
+
+test(fern_mas_himmel_es_un_dream_team, [nondet]):-
+    dream_team(fern, [fern, himmel]).
+
+test(himmel_mas_fern_es_un_dream_team, [nondet]):-
+    dream_team(fern, [himmel, fern]).
+
+test(fern_sola_no_es_un_dream_team, [fail]):-
+    dream_team(fern, [fern]).
+
+test(frieren_sola_no_es_un_dream_team_para_fern, [fail]):-
+    dream_team(fern, [frieren]).
 
 % ============================================================
 % PARTE 1 - PARTE 1 - PARTE 1 - PARTE 1 - PARTE 1 - PARTE 1
@@ -412,3 +427,69 @@ cadena_desde(Heroe, HeroesYaIncluidos, [Heroe | RestoCadena]):-
         [HeroeInspirado | HeroesYaIncluidos],
         RestoCadena
     ).
+
+% ------------------------------------------------------------
+% PUNTO 6: DREAM TEAM
+% ------------------------------------------------------------
+
+seleccionar(Elemento, [Elemento|Resto], Resto).
+seleccionar(Elemento, [Cabeza|Resto], [Cabeza|RestoSinElemento]) :-
+    seleccionar(Elemento, Resto, RestoSinElemento).
+
+
+seleccion_ordenada(_Disponibles, []).
+seleccion_ordenada(Disponibles, [Elegido|RestoSeleccion]) :-
+    seleccionar(Elegido, Disponibles, DisponiblesRestantes),
+    seleccion_ordenada(DisponiblesRestantes, RestoSeleccion).
+
+
+%sin_repetidos([], []).
+%sin_repetidos([Elemento|Resto], RestoSinRepetidos):-
+%    not(not(member(Elemento, Resto))),
+%    sin_repetidos(Resto, RestoSinRepetidos).
+%sin_repetidos([Elemento|Resto], [Elemento|RestoSinRepetidos]):-
+%    not(member(Elemento, Resto)),
+%    sin_repetidos(Resto, RestoSinRepetidos).
+
+
+existe_camino_de_inspiracion(Origen, Destino, _HeroesVisitados):-
+    inspiro_a(Origen, Destino).
+existe_camino_de_inspiracion(Origen, Destino, HeroesVisitados):-
+    inspiro_a(Origen, Intermedio),
+    Intermedio \= Destino,
+    not(member(Intermedio, HeroesVisitados)),
+    existe_camino_de_inspiracion(Intermedio, Destino, [Intermedio|HeroesVisitados]).
+
+es_antecesor_de(Antecesor, Heroe):-
+    not(not(existe_camino_de_inspiracion(Antecesor, Heroe, [Antecesor]))).
+
+
+%antecesores_de(Heroe, Antecesores):-
+%    findall(
+%        Antecesor,(es_heroe(Antecesor), Antecesor \= Heroe, es_antecesor_de(Antecesor, Heroe)),
+%        AntecesoresConRepetidos),
+%    sin_repetidos(AntecesoresConRepetidos, Antecesores).
+
+%es_heroe_unico(Heroe):-
+%    findall(Candidato, es_heroe(Candidato), Heroes),
+%    sin_repetidos(Heroes, HeroesUnicos),
+%    member(Heroe, HeroesUnicos).
+
+antecesores_de(Heroe, Antecesores):-
+    findall( Antecesor, (es_heroe(Antecesor), Antecesor \= Heroe, es_antecesor_de(Antecesor, Heroe)),
+        AntecesoresConRepetidos),
+    list_to_set(AntecesoresConRepetidos, Antecesores).
+
+es_heroe_unico(Heroe):-
+    findall(Candidato, es_heroe(Candidato), Heroes),
+    list_to_set(Heroes, HeroesUnicos),
+    member(Heroe, HeroesUnicos).
+
+dream_team(Heroe, Equipo) :-
+    es_heroe_unico(Heroe),
+    antecesores_de(Heroe, TodosLosAntecesores),
+    TodosLosAntecesores \= [],
+    seleccion_ordenada(TodosLosAntecesores, AntecesoresElegidosEnOrden),
+    AntecesoresElegidosEnOrden \= [],
+    seleccionar(Heroe, Equipo, AntecesoresElegidosEnOrden).
+
