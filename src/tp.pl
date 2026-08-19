@@ -6,134 +6,253 @@
 
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 1  Faltan agregar tests fueras de la consigna
+% TESTS DEL PUNTO 1
 % ------------------------------------------------------------
 
-test(kanne_esta_viva_en_1370):-
+test(humano_esta_vivo_despues_de_nacer):-
     esta_vivo(kanne, 1370).
 
-test(kanne_no_esta_viva_en_1300, [fail]):-
+test(persona_no_esta_viva_antes_de_nacer, [fail]):-
     esta_vivo(kanne, 1300).
 
-test(kanne_no_esta_viva_en_2000, [fail]):-
+test(humano_no_esta_vivo_si_supero_su_expectativa, [fail]):-
     esta_vivo(kanne, 2000).
 
-test(voll_esta_vivo_en_1550):-
+test(enano_esta_vivo_en_el_limite_de_su_expectativa):-
     esta_vivo(voll, 1550).
 
-test(voll_no_esta_vivo_en_1551, [fail]):-
+test(enano_no_esta_vivo_despues_de_su_expectativa, [fail]):-
     esta_vivo(voll, 1551).
 
-test(serie_esta_viva_en_5000, [nondet]):-
+test(elfo_sigue_vivo_indefinidamente, [nondet]):-
     esta_vivo(serie, 5000).
 
-test(voll_no_esta_vivo_en_1199, [fail]):-
-    esta_vivo(voll, 1199).
+test(persona_esta_viva_en_el_anio_en_que_nace):-
+    esta_vivo(kanne, 1365).
 
-test(serie_no_esta_viva_en_499, [fail]):-
-    esta_vivo(serie, 499).
+test(humano_esta_vivo_en_el_limite_de_su_expectativa):-
+    esta_vivo(kanne, 1445).
+
+test(humano_no_esta_vivo_despues_del_limite_de_su_expectativa, [fail]):-
+    esta_vivo(kanne, 1446).
 
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 2  Faltan agregar tests fueras de la consigna
+% TESTS DEL PUNTO 2
 % ------------------------------------------------------------
 
-test(lawine_no_recuerda_destruir_al_demonio_aura_en_1380, [fail]):-
+test(persona_no_recuerda_una_hazania_antes_de_conocerla, [fail]):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1380).
 
-test(lawine_recuerda_destruir_al_demonio_aura_en_1400, [nondet]):-
+test(recuerdo_por_cancion_esta_vigente_dentro_del_plazo, [nondet]):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1400).
 
-test(lawine_no_recuerda_destruir_al_demonio_aura_en_1410, [fail]):-
+test(recuerdo_por_cancion_deja_de_estar_vigente_al_superar_el_plazo, [fail]):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1410).
 
-test(voll_recuerda_destruir_al_demonio_aura_en_1450):-
+test(recuerdo_por_libro_esta_vigente_en_el_limite):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), voll, 1450).
 
-test(voll_no_recuerda_destruir_al_demonio_aura_en_1460, [fail]):-
+test(recuerdo_por_libro_deja_de_estar_vigente_al_superar_el_plazo, [fail]):-
     es_recordada_por(hazania(destruir_al_demonio_aura, _, _), voll, 1460).
 
-test(wirbel_recuerda_rescatar_a_la_hermana_de_wirbel_en_1430, [nondet]):-
+test(recuerdo_por_haber_presenciado_permanece_mientras_la_persona_esta_viva, [nondet]):-
     es_recordada_por(hazania(rescatar_a_la_hermana_de_wirbel, _, _), wirbel, 1430).
 
-test(wirbel_no_recuerda_rescatar_a_la_hermana_de_wirbel_en_1440, [fail]):-
+test(recuerdo_no_permanece_si_la_persona_ya_no_esta_viva, [fail]):-
     es_recordada_por(hazania(rescatar_a_la_hermana_de_wirbel, _, _), wirbel, 1440).
 
-test(rescatar_a_la_hermana_de_wirbel_es_una_hazania_corroborada, [nondet]):-
+test(hazania_con_una_sola_version_esta_corroborada, [nondet]):-
     esta_corroborada(rescatar_a_la_hermana_de_wirbel).
 
-test(destruir_al_demonio_aura_no_es_una_hazania_corroborada, [fail]):-
+test(hazania_con_versiones_distintas_no_esta_corroborada, [fail]):-
     esta_corroborada(destruir_al_demonio_aura).
 
-test(destruir_al_demonio_aura_paso_al_olvido_en_1460, [nondet]):-
+test(hazania_pasa_al_olvido_si_nadie_la_recuerda, [nondet]):-
     paso_al_olvido(destruir_al_demonio_aura, 1460).
 
-test(destruir_al_demonio_aura_no_paso_al_olvido_en_1440, [fail]):-
+test(hazania_no_pasa_al_olvido_si_alguien_la_recuerda, [fail]):-
     paso_al_olvido(destruir_al_demonio_aura, 1440).
 
-test(wirbel_recuerda_rescatar_a_la_hermana_de_wirbel_en_1429):-
-    es_recordada_por(hazania(rescatar_a_la_hermana_de_wirbel, _, _), wirbel, 1429).
+test(recuerdo_comienza_en_el_anio_en_que_se_conoce, [nondet]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1393).
 
-test(voll_no_recuerda_destruir_al_demonio_aura_en_1399, [fail]):-
-    es_recordada_por(hazania(destruir_al_demonio_aura, [denken], auberst), voll, 1399).
+test(recuerdo_por_cancion_esta_vigente_en_el_limite, [nondet]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1408).
+
+test(recuerdo_por_cancion_no_esta_vigente_despues_del_limite, [fail]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), lawine, 1409).
+
+test(recuerdo_por_libro_no_esta_vigente_despues_del_limite, [fail]):-
+    es_recordada_por(hazania(destruir_al_demonio_aura, _, _), voll, 1451).
 
 % ------------------------------------------------------------
-% TESTS DEL PUNTO 3  Faltan agregar tests fueras de la consigna
+% TESTS DEL PUNTO 3
 % ------------------------------------------------------------
 
-test(lawine_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
+test(habitante_recuerda_hazania_conmemorada_por_estatua_en_buen_estado, [nondet]):-
     es_recordada_por(hazania(destruir_al_rey_demonio, _, _), lawine, 1400).
 
-test(lawine_no_recuerda_destruir_al_rey_demonio_en_1390, [fail]):-
+test(habitante_no_recuerda_hazania_si_la_estatua_no_esta_en_buen_estado, [fail]):-
     es_recordada_por(hazania(destruir_al_rey_demonio, _, _), lawine, 1390).
 
-test(fern_recuerda_destruir_al_rey_demonio_en_1400, [nondet]):-
+test(habitante_recuerda_hazania_conmemorada_por_dia_festivo, [nondet]):-
     es_recordada_por(hazania(destruir_al_rey_demonio, _, _), fern, 1400).
 
-test(lawine_no_conoce_destruir_al_rey_demonio_en_1317, [fail]):-
-    conoce(lawine, hazania(destruir_al_rey_demonio, _, _), 1317, _).
+test(persona_nacida_despues_de_la_conmemoracion_la_conoce_al_nacer, [nondet]):-
+    conoce(lawine, hazania(destruir_al_rey_demonio, _, _), 1372, _).
 
-test(lernen_no_conoce_destruir_a_schlat_el_omnisciente_en_1339, [fail]):-
-    conoce(lernen, hazania(destruir_a_schlat_el_omnisciente, _, _), 1339, _).
+test(persona_nacida_antes_de_la_conmemoracion_la_conoce_al_comenzar, [nondet]):-
+    conoce(lernen, hazania(destruir_a_schlat_el_omnisciente, _, _), 1340, _).
 
-test(voll_no_conoce_destruir_a_schlat_el_omnisciente, [fail]):-
+test(habitante_de_otro_pueblo_no_conoce_la_conmemoracion, [fail]):-
     conoce(voll, hazania(destruir_a_schlat_el_omnisciente, _, _), _, _).
 
-test(estatua_de_marmol_nueva):-
-    esta_en_buen_estado(estatua(el_heroe_del_sur, marmol, 1340), 1350).
+test(estatua_de_marmol_esta_en_buen_estado_en_el_limite):-
+    esta_en_buen_estado(estatua(el_heroe_del_sur, marmol, 1340), 1370).
 
-test(estatua_de_bronce_nueva):-
-    esta_en_buen_estado(estatua(el_equipo_de_heroes, bronce, 1370), 1380).
+test(estatua_de_marmol_no_esta_en_buen_estado_despues_del_limite, [fail]):-
+    esta_en_buen_estado(estatua(el_heroe_del_sur, marmol, 1340), 1371).
 
+test(estatua_de_bronce_esta_en_buen_estado_en_el_limite):-
+    esta_en_buen_estado(estatua(el_equipo_de_heroes, bronce, 1370), 1385).
+
+test(estatua_de_bronce_no_esta_en_buen_estado_despues_del_limite, [fail]):-
+    esta_en_buen_estado(estatua(el_equipo_de_heroes, bronce, 1370), 1386).
+
+test(mantenimiento_vuelve_a_dejar_la_estatua_en_buen_estado, [nondet]):-
+    esta_en_buen_estado(estatua(el_equipo_de_heroes, bronce, 1370), 1401).
+
+test(estatua_no_esta_en_buen_estado_antes_de_ser_construida, [fail]):-
+    esta_en_buen_estado(estatua(el_equipo_de_heroes, bronce, 1370), 1369).
+
+
+% ------------------------------------------------------------
+% TESTS DEL PUNTO 4
+% ------------------------------------------------------------
+
+test(pueblo_recuerda_hazania_conmemorada_por_sus_habitantes, [nondet]):-
+    pueblo_recuerda(weise, hazania(destruir_al_rey_demonio, _, _), 1400).
+
+test(pueblo_recuerda_hazania_presenciada_por_un_habitante, [nondet]):-
+    pueblo_recuerda(klares, hazania(rescatar_a_la_hermana_de_wirbel, _, _), 1395).
+
+test(pueblo_no_recuerda_hazania_si_ningun_habitante_la_recuerda, [fail]):-
+    pueblo_recuerda(klares, hazania(destruir_al_rey_demonio, _, _), 1395).
+
+test(paginas_leidas_suma_los_libros_leidos_en_el_anio):-
+    paginas_leidas_en_un_pueblo(weise, 1335, 100).
+
+test(paginas_leidas_es_cero_si_no_se_leyo_ningun_libro_en_el_anio):-
+    paginas_leidas_en_un_pueblo(weise, 1336, 0).
+
+test(pueblo_con_mayor_cantidad_de_paginas_es_mas_lector, [nondet]):-
+    pueblo_mas_lector(ende, _, 1400).
+
+test(pueblo_es_musical_si_la_mayoria_de_hazanias_se_recuerda_por_cancion, [nondet]):-
+    es_musical(auberst, 1395).
+
+test(pueblo_no_es_musical_si_la_mayoria_no_se_recuerda_por_cancion, [fail]):-
+    es_musical(weise, 1400).
+
+test(pueblo_es_chismoso_si_ninguna_hazania_recordada_esta_corroborada, [nondet]):-
+    es_chismoso(ende, 1420).
+
+test(pueblo_no_es_chismoso_si_recuerda_alguna_hazania_corroborada, [fail]):-
+    es_chismoso(weise, 1400).
+
+test(hazania_es_importante_si_todos_los_habitantes_vivos_la_recuerdan, [nondet]):-
+    hazania_es_importante(weise, hazania(destruir_al_rey_demonio, _, _), 1400).
+
+test(hazania_no_es_importante_si_no_todos_los_habitantes_vivos_la_recuerdan, [fail]):-
+    hazania_es_importante(weise, hazania(recuperar_al_gato_perdido, _, _), 1400).
+
+test(pueblo_vive_tiempos_sin_precedentes_si_todas_las_hazanias_importantes_fueron_presenciadas, [nondet]):-
+    esta_viviendo_tiempos_sin_precedentes(klares, 1395).
+
+test(pueblo_no_vive_tiempos_sin_precedentes_si_alguna_hazania_importante_no_fue_presenciada, [fail]):-
+    esta_viviendo_tiempos_sin_precedentes(weise, 1400).
+
+test(pueblo_no_es_mas_lector_si_otro_leyo_mas_paginas, [fail]):-
+    pueblo_mas_lector(weise, _, 1400).
+
+test(pueblo_mas_lector_permite_generar_el_pueblo, [nondet]):-
+    pueblo_mas_lector(Pueblo, _, 1400),
+    Pueblo = ende.
 
 
 % ------------------------------------------------------------
 % TESTS DEL PUNTO 5
 % ------------------------------------------------------------
 
-test(fern_es_heroe, [nondet]):-
-    es_heroe(fern).
+test(persona_que_participo_en_una_hazania_conocida_es_heroe, [nondet]):-
+    es_heroe(frieren).
 
-test(frieren_inspiro_a_fern, [nondet]):-
+test(persona_que_no_participo_en_hazanias_conocidas_no_es_heroe, [fail]):-
+    es_heroe(wirbel).
+
+test(participante_de_hazania_conmemorada_puede_inspirar_a_un_heroe, [nondet]):-
     quienes_inspiraron_a(fern, frieren).
 
-:- end_tests(tpIntegrador).
+test(participante_de_hazania_presenciada_puede_inspirar_a_un_heroe, [nondet]):-
+    quienes_inspiraron_a(frieren, stark).
+
+test(heroe_que_no_conoce_hazanias_no_tiene_inspiradores, [fail]):-
+    quienes_inspiraron_a(eisen, _).
+
+%problema consigna
+% test(cadena_valida_puede_tener_varios_heroes, [nondet]):-
+%     cadena_de_inspiracion_entre_heroes(himmel, [himmel, frieren, fern, denken]).
+
+test(cadena_no_es_valida_si_falta_una_relacion_de_inspiracion, [fail]):-
+    cadena_de_inspiracion_entre_heroes(denken, [denken, frieren]).
+
+test(cadena_no_es_valida_si_un_heroe_se_repite, [fail]):-
+    cadena_de_inspiracion_entre_heroes(frieren, [frieren, fern, frieren]).
+
+test(cadena_valida_puede_tener_dos_heroes, [nondet]):-
+    cadena_de_inspiracion_entre_heroes(himmel, [himmel, frieren]).
+
+test(cadena_valida_puede_continuar_con_mas_inspiraciones, [nondet]):-
+    cadena_de_inspiracion_entre_heroes(himmel, [himmel, frieren, fern]).
+
 
 % ------------------------------------------------------------
 % TESTS DEL PUNTO 6 
 % ------------------------------------------------------------
 
-test(fern_mas_himmel_es_un_dream_team, [nondet]):-
+test(dream_team_valido_incluye_al_heroe_y_un_antecesor, [nondet]):-
     dream_team(fern, [fern, himmel]).
 
-test(himmel_mas_fern_es_un_dream_team, [nondet]):-
+test(orden_de_integrantes_no_afecta_al_dream_team, [nondet]):-
     dream_team(fern, [himmel, fern]).
 
-test(fern_sola_no_es_un_dream_team, [fail]):-
+test(dream_team_no_es_valido_si_solo_incluye_al_heroe, [fail]):-
     dream_team(fern, [fern]).
 
-test(frieren_sola_no_es_un_dream_team_para_fern, [fail]):-
+test(dream_team_no_es_valido_si_no_incluye_al_heroe, [fail]):-
     dream_team(fern, [frieren]).
+
+test(dream_team_no_puede_incluir_heroes_posteriores_al_heroe, [fail]):-
+    dream_team(fern, [fern, denken]).
+
+test(dream_team_no_puede_tener_integrantes_repetidos, [fail]):-
+    dream_team(fern, [fern, himmel, himmel]).
+
+test(dream_team_permite_generar_el_equipo, [nondet]):-
+    dream_team(fern, Equipo),
+    member(himmel, Equipo).
+
+test(dream_team_permite_generar_el_heroe, [nondet]):-
+    dream_team(Heroe, [fern, himmel]),
+    Heroe = fern.
+
+test(dream_team_permite_generar_heroe_y_equipo, [nondet]):-
+    dream_team(Heroe, Equipo),
+    member(Heroe, Equipo).
+
+:- end_tests(tpIntegrador).
+
 
 % ============================================================
 % PARTE 1 - PARTE 1 - PARTE 1 - PARTE 1 - PARTE 1 - PARTE 1
