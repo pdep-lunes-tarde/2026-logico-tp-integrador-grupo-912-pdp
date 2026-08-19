@@ -271,24 +271,21 @@ mantenimiento(el_heroe_del_sur, 1410).
 anio_inicio_conmemoracion(diaFestivo(AnioInicio), AnioInicio).
 anio_inicio_conmemoracion(estatua(_, _, AnioConstruccion), AnioConstruccion).
 
-anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioInicio):-
-    AnioNacimiento =< AnioInicio.
-
-anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioNacimiento):-
-    AnioNacimiento > AnioInicio.
+anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioConocimiento):-
+    max_member(AnioConocimiento, [AnioNacimiento, AnioInicio]).
 
 
 % Estado de conservación de las estatuas
 
-duracion_buen_estado(marmol, 30).
-duracion_buen_estado(bronce, 15).
+durabilidad_del_material(marmol, 30).
+durabilidad_del_material(bronce, 15).
 
 esta_en_buen_estado(estatua(NombreEstatua, Material, AnioConstruccion), AnioConsulta):-
     conmemora(_, _, estatua(NombreEstatua, Material, AnioConstruccion)),
-    duracion_buen_estado(Material, Duracion),
-    puesta_en_condiciones(estatua(NombreEstatua, Material, AnioConstruccion), AnioPuestaEnCondiciones),
+    durabilidad_del_material(Material, Durabilidad),
+    puesta_en_condiciones(estatua(NombreEstatua, Material, AnioConstruccion),AnioPuestaEnCondiciones),
     AnioPuestaEnCondiciones =< AnioConsulta,
-    AnioConsulta =< AnioPuestaEnCondiciones + Duracion.
+    AnioConsulta =< AnioPuestaEnCondiciones + Durabilidad.
 
 puesta_en_condiciones(estatua(_, _, AnioConstruccion), AnioConstruccion).
 
