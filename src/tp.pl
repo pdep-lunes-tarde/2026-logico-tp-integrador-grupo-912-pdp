@@ -147,13 +147,16 @@ test(paginas_leidas_es_cero_si_no_se_leyo_ningun_libro_en_el_anio):-
     paginas_leidas_en_un_pueblo(weise, 1336, 0).
 
 test(pueblo_con_mayor_cantidad_de_paginas_es_mas_lector, [nondet]):-
-    pueblo_mas_lector(ende, _, 1400).
+    pueblo_mas_lector(ende, 1400).
 
 test(pueblo_es_musical_si_la_mayoria_de_hazanias_se_recuerda_por_cancion, [nondet]):-
     es_musical(auberst, 1395).
 
 test(pueblo_no_es_musical_si_la_mayoria_no_se_recuerda_por_cancion, [fail]):-
     es_musical(weise, 1400).
+
+test(pueblo_no_es_musical_si_solo_la_mitad_se_recuerda_por_cancion, [fail]):-
+    es_musical(auberst, 1400).
 
 test(pueblo_es_chismoso_si_ninguna_hazania_recordada_esta_corroborada, [nondet]):-
     es_chismoso(ende, 1420).
@@ -174,10 +177,10 @@ test(pueblo_no_vive_tiempos_sin_precedentes_si_alguna_hazania_importante_no_fue_
     esta_viviendo_tiempos_sin_precedentes(weise, 1400).
 
 test(pueblo_no_es_mas_lector_si_otro_leyo_mas_paginas, [fail]):-
-    pueblo_mas_lector(weise, _, 1400).
+    pueblo_mas_lector(weise, 1400).
 
 test(pueblo_mas_lector_permite_generar_el_pueblo, [nondet]):-
-    pueblo_mas_lector(Pueblo, _, 1400),
+    pueblo_mas_lector(Pueblo, 1400),
     Pueblo = ende.
 
 
@@ -200,9 +203,8 @@ test(participante_de_hazania_presenciada_puede_inspirar_a_un_heroe, [nondet]):-
 test(heroe_que_no_conoce_hazanias_no_tiene_inspiradores, [fail]):-
     quienes_inspiraron_a(eisen, _).
 
-%problema consigna
-% test(cadena_valida_puede_tener_varios_heroes, [nondet]):-
-%     cadena_de_inspiracion_entre_heroes(himmel, [himmel, frieren, fern, denken]).
+test(cadena_valida_puede_tener_varios_heroes, [nondet]):-
+    cadena_de_inspiracion_entre_heroes(himmel, [himmel, fern, frieren, denken]).
 
 test(cadena_no_es_valida_si_falta_una_relacion_de_inspiracion, [fail]):-
     cadena_de_inspiracion_entre_heroes(denken, [denken, frieren]).
@@ -227,6 +229,9 @@ test(dream_team_valido_incluye_al_heroe_y_un_antecesor, [nondet]):-
 test(orden_de_integrantes_no_afecta_al_dream_team, [nondet]):-
     dream_team(fern, [himmel, fern]).
 
+test(dream_team_valido_puede_incluir_varios_antecesores, [nondet]):-
+    dream_team(fern, [himmel, frieren, fern]).
+
 test(dream_team_no_es_valido_si_solo_incluye_al_heroe, [fail]):-
     dream_team(fern, [fern]).
 
@@ -234,7 +239,7 @@ test(dream_team_no_es_valido_si_no_incluye_al_heroe, [fail]):-
     dream_team(fern, [frieren]).
 
 test(dream_team_no_puede_incluir_heroes_posteriores_al_heroe, [fail]):-
-    dream_team(fern, [fern, denken]).
+    dream_team(fern, [fern, frieren, denken]).
 
 test(dream_team_no_puede_tener_integrantes_repetidos, [fail]):-
     dream_team(fern, [fern, himmel, himmel]).
@@ -325,6 +330,9 @@ conoce(Persona, Hazania, AnioConocimiento, conmemoracion(TipoConmemoracion)):-
 % Punto 2.a - Una hazaña es recordada por alguien en cierto año
 
 es_recordada_por(Hazania, Persona, Anio):-
+    recuerda_de_forma(Hazania, Persona, Anio, _).
+
+recuerda_de_forma(Hazania, Persona, Anio, FormaConocimiento):-
     conoce(Persona, Hazania, AnioConocimiento, FormaConocimiento),
     esta_vivo(Persona, Anio),
     AnioConocimiento =< Anio,
@@ -347,15 +355,12 @@ recuerdo_vigente(conmemoracion(estatua(NombreEstatua, Material, AnioConstruccion
 
 esta_corroborada(Nombre_Hazania):-
     conoce(_, hazania(Nombre_Hazania, Realizadores, Lugar_de_Hazania), _, _),
-    not(hay_otra_version(Nombre_Hazania, Realizadores, Lugar_de_Hazania)).
+    forall(
+        conoce(_, hazania(Nombre_Hazania, OtrosRealizadores, OtroLugar), _, _),
+        misma_version(Realizadores, Lugar_de_Hazania, OtrosRealizadores, OtroLugar)
+    ).
 
-hay_otra_version(Nombre_Hazania, Realizadores, _):-
-    conoce(_, hazania(Nombre_Hazania, Otros_Realizadores, _), _, _),
-    Otros_Realizadores \= Realizadores.
-
-hay_otra_version(Nombre_Hazania, _, Lugar_de_Hazania):-
-    conoce(_, hazania(Nombre_Hazania, _, Otro_Lugar_de_Hazania), _, _),
-    Otro_Lugar_de_Hazania \= Lugar_de_Hazania.
+misma_version(Realizadores, Lugar, Realizadores, Lugar).
 
 
 % Punto 2.c - Paso al olvido
@@ -391,7 +396,8 @@ anio_inicio_conmemoracion(diaFestivo(AnioInicio), AnioInicio).
 anio_inicio_conmemoracion(estatua(_, _, AnioConstruccion), AnioConstruccion).
 
 anio_en_que_conocio(AnioNacimiento, AnioInicio, AnioConocimiento):-
-    max_member(AnioConocimiento, [AnioNacimiento, AnioInicio]).
+    max_list([AnioNacimiento, AnioInicio], AnioConocimiento).
+%%  max_member(AnioConocimiento, [AnioNacimiento, AnioInicio]).
 
 
 % Estado de conservación de las estatuas
@@ -436,7 +442,7 @@ paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasTotales):-
 
 % III
     
-pueblo_mas_lector(Pueblo, OtroPueblo, Anio):-
+pueblo_mas_lector(Pueblo, Anio):-
     habitante(_, _, _, Pueblo),
     paginas_leidas_en_un_pueblo(Pueblo, Anio, PaginasLeidas),
     forall(
@@ -451,20 +457,16 @@ pueblo_mas_lector(Pueblo, OtroPueblo, Anio):-
 
 es_musical(Pueblo, Anio):-
     habitante(_, _, _, Pueblo),
-
     findall(Hazania, (pueblo_recuerda(Pueblo, Hazania, Anio), se_recuerda_por_cancion(Pueblo, Hazania, Anio)), HazaniasRecordadasPorCancion),
-    findall(Hazania,(pueblo_recuerda(Pueblo, Hazania, Anio), not(se_recuerda_por_cancion(Pueblo, Hazania, Anio))), HazaniasNoRecordadasPorCancion),
+    findall(Hazania, (pueblo_recuerda(Pueblo, Hazania, Anio), not(se_recuerda_por_cancion(Pueblo, Hazania, Anio))), HazaniasNoRecordadasPorCancion),
 
     length(HazaniasRecordadasPorCancion, CantidadRecordadasPorCancion),
-    length(HazaniasNoRecordadasPorCancion,CantidadNoRecordadasPorCancion),
+    length(HazaniasNoRecordadasPorCancion, CantidadNoRecordadasPorCancion),
     CantidadRecordadasPorCancion > CantidadNoRecordadasPorCancion.
 
 se_recuerda_por_cancion(Pueblo, Hazania, Anio):-
     habitante(Persona, _, _, Pueblo),
-    conoce(Persona, Hazania, AnioConocimiento, cancion),
-    AnioConocimiento =< Anio,
-    recuerdo_vigente(cancion, AnioConocimiento, Anio),
-    esta_vivo(Persona, Anio).
+    recuerda_de_forma(Hazania, Persona, Anio, cancion).
 
 % V
 
@@ -499,9 +501,7 @@ esta_viviendo_tiempos_sin_precedentes(Pueblo, Anio):-
 
 pueblo_recuerda_por_presenciar(Pueblo, Hazania, Anio):-
     habitante(Persona, _, _, Pueblo),
-    conoce(Persona, Hazania, AnioConocimiento, presencio),
-    AnioConocimiento =< Anio,
-    es_recordada_por(Hazania, Persona, Anio).
+    recuerda_de_forma(Hazania, Persona, Anio, presencio).
 
 % ------------------------------------------------------------
 % PUNTO 5: INSPIRACIÓN
