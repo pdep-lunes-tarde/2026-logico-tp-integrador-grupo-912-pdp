@@ -533,7 +533,7 @@ cadena_de_inspiracion_entre_heroes(Heroe, Cadena):-
 
 cadena_desde(Heroe, HeroesYaIncluidos, [Heroe, HeroeInspirado]):-
     inspiro_a(Heroe, HeroeInspirado),
-    not(member(HeroeInspirado, HeroesYaIncluidos)).
+    not(member(HeroeInspirado, HeroesYaIncluidos)). 
 
 cadena_desde(Heroe, HeroesYaIncluidos, [Heroe | RestoCadena]):-
     inspiro_a(Heroe, HeroeInspirado),
@@ -550,14 +550,14 @@ cadena_desde(Heroe, HeroesYaIncluidos, [Heroe | RestoCadena]):-
 
 dream_team(Heroe, Equipo):-
     cadena_de_inspiracion_entre_heroes(_, Cadena),
-    append(_, [Heroe], Cadena),
-    cantidad_valida_de_integrantes(Cadena, Equipo),
+    last(Cadena, Heroe),
+    puede_formarse_con(Cadena, Equipo),
     miembros_de_cadena(Equipo, Cadena),
     member(Heroe, Equipo),
     sin_repetidos(Equipo).
 
 
-cantidad_valida_de_integrantes(Cadena, Equipo):-
+puede_formarse_con(Cadena, Equipo):-
     length(Cadena, CantidadHeroes),
     between(2, CantidadHeroes, CantidadEquipo),
     length(Equipo, CantidadEquipo).
